@@ -32,10 +32,10 @@ model PollingLinks {
 }
 
 model Polling_History {
-  id        String     @id @default(uuid())
-  url       String
-  data      Json
-  PolledAt  DateTime
-  pollingId String     @unique
-  Polling   PollingLinks @relation(fields: [pollingId], references: [id])
+  id                  String     @id @default(uuid())
+  url                 String
+  LastPolledStatus    String
+  PolledAt            DateTime
+  pollingId           String     @unique
+  Polling             PollingLinks @relation(fields: [pollingId], references: [id], onDelete: Cascade)
 }
