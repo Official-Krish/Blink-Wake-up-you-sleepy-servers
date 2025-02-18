@@ -4,30 +4,32 @@ import { prisma } from "@repo/db/prisma";
 const storePollingResultInDatabase = async (url: string, PolledStatus: string, timestamp: number, userId: string): Promise<void> => {
     console.log(`Storing polling result for ${url} in database...`);
     try {
-        const findPollingLink = await prisma.pollingLinks.findFirst({
-            where: {
-                url: url,
-                userId: userId,
-            },
-        });
+        await prisma.$transaction(async (prisma) => {
+            const findPollingLink = await prisma.pollingLinks.findFirst({
+                where: {
+                    url: url,
+                    userId: userId,
+                },
+            });
 
-        if (!findPollingLink) {
-            console.log("Polling link not found, skipping...");
-            return;
-        }
-        
-        await prisma.polling_History.upsert({
-            where: { pollingId: findPollingLink.id }, 
-            update: {
-                LastPolledStatus: PolledStatus,
-                PolledAt: new Date(timestamp),
-            },
-            create: {
-                url,
-                LastPolledStatus: PolledStatus,
-                PolledAt: new Date(timestamp),
-                pollingId: findPollingLink.id, 
-            },
+            if (!findPollingLink) {
+                console.error(`Polling link ${url} not found for user ${userId}`);
+                throw new Error(`Polling link ${url} not found for user ${userId}`);
+            }
+
+            await prisma.polling_History.upsert({
+                where: { pollingId: findPollingLink.id },
+                update: {
+                    LastPolledStatus: PolledStatus,
+                    PolledAt: new Date(timestamp),
+                },
+                create: {
+                    url,
+                    LastPolledStatus: PolledStatus,
+                    PolledAt: new Date(timestamp),
+                    pollingId: findPollingLink.id,
+                },
+            });
         });
       console.log(`Stored polling result for ${url} in database.`);
     } catch (error) {
