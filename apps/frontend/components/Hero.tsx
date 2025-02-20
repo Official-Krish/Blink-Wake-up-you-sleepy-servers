@@ -27,7 +27,7 @@ export default function Hero() {
         transition={{ duration: 0.8 }}
         className="relative z-10 flex flex-col items-center text-center space-y-8"
       >
-        <a href="https://github.com/" target="_blank">
+        <a href="https://github.com/Official-Krish/Wake-up-you-sleepy-servers" target="_blank">
           <HoverBorderGradient
             containerClassName="rounded-full"
             className="group/anchor z-20 pl-10 first-letter: flex items-center justify-center gap-4 rounded-full text-white/80 bg-black/50 py-2 text-sm"
