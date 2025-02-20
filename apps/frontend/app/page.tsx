@@ -1,4 +1,7 @@
+import Features from "@/components/Features";
+import { FlickeringGridList } from "@/components/FlickeringGridList";
 import Hero  from "@/components/Hero";
+import Notification from "@/components/Notification";
 import GridPattern from "@/components/ui/grid-pattern";
 import { cn } from "@/lib/utils";
 
@@ -27,6 +30,11 @@ export default function Home() {
           )}
         />
         <Hero />
+        <Features />
+        <div>
+          <Notification />
+        </div>
+        <FlickeringGridList />
       </div>
     </div>
   );

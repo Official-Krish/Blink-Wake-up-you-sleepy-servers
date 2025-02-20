@@ -1,5 +1,4 @@
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcrypt";
 import { NextAuthOptions } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import { JWTPayload, SignJWT, importJWK } from "jose";
@@ -57,7 +56,6 @@ export const authConfig = {
           return null;
         }
 
-        const hashedPassword = await bcrypt.hash(credentials.password, 10);
 
         const userDb = await prisma.user.findFirst({
           where: {
@@ -71,7 +69,7 @@ export const authConfig = {
         });
 
         if (userDb) {
-          if (await bcrypt.compare(credentials.password, userDb.password)) {
+          if ((credentials.password === userDb.password)) {
             const jwt = await generateJWT({
               id: userDb.id,
             });
@@ -100,7 +98,7 @@ export const authConfig = {
             data: {
               email: credentials.email,
               name: credentials.name,
-              password: hashedPassword,
+              password: credentials.password,
             },
           });
 

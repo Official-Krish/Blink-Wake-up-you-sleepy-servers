@@ -57,7 +57,6 @@ export function GridPattern({
           {squares.map(([x, y]) => (
             <rect
               strokeWidth="0"
-              key={`${x}-${y}`}
               width={width - 1}
               height={height - 1}
               x={x * width + 1}

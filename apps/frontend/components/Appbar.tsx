@@ -6,11 +6,12 @@ import {
   useScroll,
   motion,
 } from "framer-motion";
-import { Github, House, Logs, Zap, ZapIcon } from "lucide-react";
+import { Github, House, Logs, Zap } from "lucide-react";
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { Navlogin } from "./NavLogin";
 import { cn } from "@/lib/utils";
+import { signIn, useSession } from "next-auth/react";
 
 const NavbarData = [
   {
@@ -23,11 +24,11 @@ const NavbarData = [
     link: "https://github.com/",
     icon: <Github />,
   },
-  {
-    label: "Dashboard",
-    link: "/dashboard",
-    icon: <Logs />,
-  },
+  // {
+  //   label: "Dashboard",
+  //   link: "/dashboard",
+  //   icon: <Logs />,
+  // },
 ];
 
 export const Appbar = () => {
@@ -150,6 +151,8 @@ const SlideNavTabs = () => {
     width: 0,
     opacity: 1,
   });
+  const { data: session, status } = useSession();
+
   return (
     <div className="fixed right-0 left-0 top-5 z-30 mx-auto text-white bg-transparent">
       <ul
@@ -170,9 +173,7 @@ const SlideNavTabs = () => {
           </Link>
         ))}
         <Tab setPosition={setPosition}>
-          <Link href={"/dashboard"}>
-            <Navlogin />
-          </Link>
+          <Navlogin />
         </Tab>
         <Cursor position={position} />
       </ul>

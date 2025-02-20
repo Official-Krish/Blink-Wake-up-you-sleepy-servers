@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 export const Navlogin = () => {
   const { data: session, status } = useSession();
@@ -12,13 +12,13 @@ export const Navlogin = () => {
     );
   }
 
-  if (status === "unauthenticated") {
+  if (!session?.user) {
     return (
       <Button
         variant={"default"}
         className="text-white bg-transparent hover:bg-transparent px-0"
         onClick={() => {
-          window.location.href = "/getstarted";
+          signIn();
         }}
       >
         Login
@@ -26,15 +26,16 @@ export const Navlogin = () => {
     );
   }
 
-  if (!session || !session.user) return null;
-
   return (
     <Image
-      src={session.user.image || "/avatar.png"}
+      src={session?.user?.image || "/avatar.png"}
       alt="User profile picture"
       width={40}
       height={40}
-      className="rounded-full"
+      className="rounded-full cursor-pointer"
+      onClick={() => {
+        window.location.href = "/dashboard";
+      }}
     />
   );
 };
