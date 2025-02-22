@@ -45,7 +45,7 @@ export default function Hero() {
           transition={{ delay: 0.2, duration: 0.8 }}
         >
           <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl/none max-w-3xl mx-auto ">
-            Wake Up Your Sleepy Servers!
+            Wake Up You Sleepy Servers!
           </h1>
           <p className="mx-auto max-w-[700px] text-gray-300 md:text-xl lg:text-2xl">
             Because even servers need a good poke now and then. We&apos;ll keep
