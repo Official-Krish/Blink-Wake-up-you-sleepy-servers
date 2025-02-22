@@ -24,6 +24,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Globe, MessageSquare, AlertCircle, Loader2 } from "lucide-react";
+import axios from "axios";
 
 const formSchema = z.object({
   url: z
@@ -61,7 +62,13 @@ export default function AddTaskForm() {
 
   async function handleSubmit(values: z.infer<typeof formSchema>) {
     try {
-      
+        console.log(values);
+        const repsonse = await axios.post("/api/ping", {
+            url: values.url,
+            notify: values.notify,
+            discordUrl: values.discordUrl || "None",
+        });
+        console.log(repsonse);
       form.reset();
     } catch (err: any) {
       

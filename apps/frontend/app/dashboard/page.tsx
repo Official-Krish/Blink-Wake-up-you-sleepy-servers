@@ -8,6 +8,7 @@ import React from "react";
 import { SectionWrapper } from "@/components/Section-wrapper";
 import AddTaskForm from "@/components/Add-tasks";
 import SheetWrapper from "@/components/SheetWrapper";
+import TaskContainer from "@/components/TaskContainer";
 
 export default function Dashboard() {
   return (
@@ -22,6 +23,7 @@ export default function Dashboard() {
               className="flex flex-col items-center text-center space-y-8"
             >
               <DashboardHeader />
+              <TaskContainer />
             </motion.div>
           </section>
         </div>
@@ -99,6 +101,7 @@ function DashboardHeader() {
           </div>
         </div>
       </div>
+
       <SheetWrapper
         title="Add Task"
         description="Add a new task to monitor"
