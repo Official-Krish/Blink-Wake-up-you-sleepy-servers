@@ -20,7 +20,7 @@ export async function POST(req: Request) {
                 id: id,
             },
         });
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/ping/delete`, {
+        await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/ping/delete`, {
             id,
         });
         return NextResponse.json({ msg: "Ping deleted successfully" }, { status: 200 });

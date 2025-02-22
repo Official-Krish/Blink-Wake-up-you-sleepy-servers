@@ -24,7 +24,7 @@ export async function GET() {
         const data = pings.map((ping) => ({
             ...ping,
             LastPolledStatus: pollHistory.find((history) => history.pollingId === ping.id)?.LastPolledStatus,
-            PolledAt: pollHistory.find((history) => history.pollingId === ping.id)?.PolledAt,
+            PolledAt: pollHistory.find((history) => history.pollingId === ping.id)?.PolledAt.toString(),
         }));
         return NextResponse.json(data);
     } catch (error) {

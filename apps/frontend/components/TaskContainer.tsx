@@ -1,56 +1,69 @@
 import axios from "axios";
-import { CircleArrowUp, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronUp, CircleArrowUp, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { TaskLogs } from "./TaskLogs";
+import { Button } from "./ui/button";
 
 interface Ping {
     id: string;
     url: string;
     LastPolledStatus: string;
-    PolledAt: Date;
+    PolledAt: string;
 }
 
 export default function TaskContainer() {
     const [pings, setPings] = useState<Ping[]>([]);
+    const [taskLogsOpen, setTaskLogsOpen] = useState<{ [key: string]: boolean }>({});
 
     async function fetchPings() {
         const response = await axios.get("/api/ping/getAll");
         const data = await response.data;
         setPings(data);
     }
+
     useEffect(() => {
         fetchPings();
     }, []);
 
     async function deletePing(id: string) {
-        await axios.post(`/api/ping/delete`, {
-            id,
+        await axios.post(`/api/ping/delete`, { id });
+        setPings((prev) => prev.filter((ping) => ping.id !== id));
+        setTaskLogsOpen((prev) => {
+            const updated = { ...prev };
+            delete updated[id];
+            return updated;
         });
-        setPings(pings.filter((ping) => ping.id !== id));
+    }
+
+    function toggleTaskDetails(id: string) {
+        setTaskLogsOpen((prevState) => ({
+            ...prevState,
+            [id]: !prevState[id], 
+        }));
     }
 
     return (
         <div className="mt-6 flex-grow bg-zinc-900 rounded-xl w-[1000px] min-h-[60px]">
             {pings.length > 0 ? (
                 pings.map((ping) => (
-                    <div key={ping.id} className="flex justify-between px-4 border-b border-white/20 py-3">
-                        <p className="text-xl text-white font-semibold">{ping.url}</p>
-                        <div className="flex space-x-3">
-                            <p className={`text-lg ${ping.LastPolledStatus === "UP" ? "text-green-500" : "text-red-500"} font-semibold`}>
-                                {ping.LastPolledStatus === "UP" ? "Server is up" : "Server is down"}
-                            </p>
-                            <p className="text-lg text-white font-semibold">{
-                                new Date(ping.PolledAt).toLocaleString("en-US", {
-                                    day: "numeric",
-                                    month: "long",
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                    hour12: true,
-                                })
-                            }</p>
-                            <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded" onClick={() => deletePing(ping.id)}>
-                                {<Trash2 className="h-4 w-4" />}
-                            </button>
+                    <div key={ping.id}>
+                        <div className={`flex justify-between px-4 ${taskLogsOpen[ping.id] ? "" : "border-b border-white/20"} py-3`}>
+                            <p className="text-xl text-white font-semibold">{ping.url}</p>
+                            <div className="flex space-x-3">
+                                <div className="flex items-center">
+                                    <div className={`h-3 w-3 rounded-full mr-3 ${ping.LastPolledStatus === "UP" ? "bg-green-500" : "bg-red-500"}`}></div>
+                                </div>
+                                <Button variant="default" onClick={() => toggleTaskDetails(ping.id)}>
+                                    {taskLogsOpen[ping.id] ? <ChevronUp /> : <ChevronDown />}
+                                </Button>
+                                <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded" onClick={() => deletePing(ping.id)}>
+                                    <Trash2 className="h-4 w-4" />
+                                </button>
+                            </div>
                         </div>
+                        {taskLogsOpen[ping.id] && (
+                            <TaskLogs Server={ping.LastPolledStatus} Last_Polled={ping.PolledAt} />
+                        )}
                     </div>
                 ))
             ) : (
