@@ -1,5 +1,6 @@
 import { authConfig } from "@/lib/auth";
 import { prisma } from "@repo/db/prisma";
+import axios from "axios";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
@@ -18,6 +19,9 @@ export async function POST(req: Request) {
             where: {
                 id: id,
             },
+        });
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/ping/delete`, {
+            id,
         });
         return NextResponse.json({ msg: "Ping deleted successfully" }, { status: 200 });
     } catch (error) {

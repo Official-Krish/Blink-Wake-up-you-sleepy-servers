@@ -26,3 +26,15 @@ export const addLinkToPollingQueue = async (url: string, userId: string) => {
 export const hashUrl = async (url: string) => {
     return createHash("sha256").update(url).digest("hex");
 }
+
+export const removeLinkFromPollingQueue = async (id: string) => {
+    return new Promise((resolve, reject) => {
+        redis.lrem('pollingQueue', 1, id, (err, result) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(result);
+        });
+    });
+}

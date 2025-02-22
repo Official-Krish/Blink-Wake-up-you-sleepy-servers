@@ -14,7 +14,19 @@ export async function GET() {
                 userId: session.user.uid,
             },
         });
-        return NextResponse.json(pings);
+        const pollHistory = await prisma.polling_History.findMany({
+            where: {
+                pollingId: {
+                    in: pings.map((ping) => ping.id),
+                },
+            },
+        });
+        const data = pings.map((ping) => ({
+            ...ping,
+            LastPolledStatus: pollHistory.find((history) => history.pollingId === ping.id)?.LastPolledStatus,
+            PolledAt: pollHistory.find((history) => history.pollingId === ping.id)?.PolledAt,
+        }));
+        return NextResponse.json(data);
     } catch (error) {
         console.log(error);
         return NextResponse.json({ error: "Something went wrong" }, { status: 400 });

@@ -13,9 +13,9 @@ export async function POST(req: NextRequest) {
         const { url, notify, discordUrl } = await req.json();
         console.log(url, notify, discordUrl);
 
-        if (!url || !notify) {
-            return NextResponse.json({ error: "Please enter a valid URL" }, { status: 400 });
-        }
+        // if (!url || !notify) {
+        //     return NextResponse.json({ error: "Please enter a valid URL" }, { status: 400 });
+        // }
 
         const reponse = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/ping/create`, {
             url,

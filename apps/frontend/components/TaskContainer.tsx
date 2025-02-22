@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 interface Ping {
     id: string;
     url: string;
+    LastPolledStatus: string;
+    PolledAt: Date;
 }
 
 export default function TaskContainer() {
@@ -32,7 +34,19 @@ export default function TaskContainer() {
                 pings.map((ping) => (
                     <div key={ping.id} className="flex justify-between px-4 border-b border-white/20 py-3">
                         <p className="text-xl text-white font-semibold">{ping.url}</p>
-                        <div>
+                        <div className="flex space-x-3">
+                            <p className={`text-lg ${ping.LastPolledStatus === "UP" ? "text-green-500" : "text-red-500"} font-semibold`}>
+                                {ping.LastPolledStatus === "UP" ? "Server is up" : "Server is down"}
+                            </p>
+                            <p className="text-lg text-white font-semibold">{
+                                new Date(ping.PolledAt).toLocaleString("en-US", {
+                                    day: "numeric",
+                                    month: "long",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    hour12: true,
+                                })
+                            }</p>
                             <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded" onClick={() => deletePing(ping.id)}>
                                 {<Trash2 className="h-4 w-4" />}
                             </button>
