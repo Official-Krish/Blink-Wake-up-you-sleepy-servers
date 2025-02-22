@@ -7,8 +7,14 @@ export const PollingRouter: Router = Router();
 PollingRouter.post("/create", async (req, res) => {
     const { url, userId, notify, discordUrl } = req.body;
 
-    if (!url || !userId) {
+    if (!url || !userId|| !notify) {
         return res.status(400).json({ message: "Please provide all the required fields" });
+    }
+    let discordURL
+    if(!notify){
+        discordURL = null;
+    } else {
+        discordURL = discordUrl;
     }
 
     try {
@@ -16,6 +22,8 @@ PollingRouter.post("/create", async (req, res) => {
             data: { 
                 url, 
                 pollingId: userId, 
+                notify: notify,
+                discordUrl: discordURL,
                 User: {
                     connect: { id: userId }
                 }

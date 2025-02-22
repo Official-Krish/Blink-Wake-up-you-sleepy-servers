@@ -28,9 +28,21 @@ export const hashUrl = async (url: string) => {
 }
 
 export const removeLinkFromPollingQueue = async (id: string) => {
-    return new Promise((resolve, reject) => {
-        redis.lrem('pollingQueue', 1, id, (err, result) => {
+    new Promise((resolve, reject) => {
+        redis.zrem('pollingQueue', 1, id, (err, result) => {
             if (err) {
+                console.log(err);
+                reject(err);
+                return;
+            }
+            resolve(result);
+        });
+    });
+
+    return new Promise((resolve, reject) => {
+        redis.zrem('pollingResults', 1, id, (err, result) => {
+            if (err) {
+                console.log(err);
                 reject(err);
                 return;
             }
