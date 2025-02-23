@@ -27,26 +27,19 @@ export const hashUrl = async (url: string) => {
     return createHash("sha256").update(url).digest("hex");
 }
 
-export const removeLinkFromPollingQueue = async (id: string) => {
-    new Promise((resolve, reject) => {
-        redis.zrem('pollingQueue', 1, id, (err, result) => {
-            if (err) {
-                console.log(err);
-                reject(err);
-                return;
+export const removeLinkFromPollingQueue = async (id: string, url: string) => {
+    try {
+        const pollingQueueEntries = await redis.zrange('pollingQueue', 0, -1);
+        for (const entry of pollingQueueEntries) {
+            const parsedEntry = JSON.parse(entry);
+            if (parsedEntry.url === url && parsedEntry.userId === id) {
+                await redis.zrem('pollingQueue', entry);
+                break; 
             }
-            resolve(result);
-        });
-    });
-
-    return new Promise((resolve, reject) => {
-        redis.zrem('pollingResults', 1, id, (err, result) => {
-            if (err) {
-                console.log(err);
-                reject(err);
-                return;
-            }
-            resolve(result);
-        });
-    });
-}
+        }
+        await redis.lrem('pollingResults', 0, url);
+    } catch (error) {
+        console.error('Error removing link from polling queue:', error);
+        throw error;
+    }
+};

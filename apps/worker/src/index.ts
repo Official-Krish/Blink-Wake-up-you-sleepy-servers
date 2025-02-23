@@ -52,6 +52,11 @@ const pollLink = async (url: string, userId: string): Promise<void> => {
         }
         await storePollingResultInRedis(url, PolledStatus, userId);
     } catch (error) {
+        await axios.post(`${process.env.BACKEND_URL}/SendNoti`, {
+            ueerId: userId,
+            url: url,
+            TimeStamp: new Date().toString(),
+        })
         console.error(`Polling failed for ${url}:`, (error as AxiosError).message);
     }
 }

@@ -2,6 +2,10 @@ import { redis } from "./index";
 import { prisma } from "@repo/db/prisma";
 
 const storePollingResultInDatabase = async (url: string, PolledStatus: string, timestamp: number, userId: string): Promise<void> => {
+    const linkExists = await checkIfLinkExists(url, userId);
+    if (!linkExists) {
+        throw new Error(`Polling link ${url} not found for user ${userId}`);
+    }
     console.log(`Storing polling result for ${url} in database...`);
     try {
         await prisma.$transaction(async (prisma) => {
@@ -47,4 +51,12 @@ export const syncResultsToDatabase = async (): Promise<void> => {
       const { url, PolledStatus, timestamp, userId } = JSON.parse(result);
       await storePollingResultInDatabase(url, PolledStatus, timestamp, userId);
     }
+};
+
+const checkIfLinkExists = async (url: string, userId: string) => {
+    const links = await redis.zrange('pollingQueue', 0, -1);
+    return links.some(link => {
+        const parsedLink = JSON.parse(link);
+        return parsedLink.url === url && parsedLink.userId === userId;
+    });
 };

@@ -10,18 +10,14 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "You are not authenticated" }, { status: 401 });
     }
     try {
-        const { id } = await req.json();
+        const { id, url } = await req.json();
         if (!id) {
             return NextResponse.json({ error: "Please provide a valid id" }, { status: 400 });
         }
 
-        await prisma.pollingLinks.delete({
-            where: {
-                id: id,
-            },
-        });
         await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/ping/delete`, {
             id,
+            url
         });
         return NextResponse.json({ msg: "Ping deleted successfully" }, { status: 200 });
     } catch (error) {

@@ -7,7 +7,7 @@ export const PollingRouter: Router = Router();
 PollingRouter.post("/create", async (req, res) => {
     const { url, userId, notify, discordUrl } = req.body;
 
-    if (!url || !userId|| !notify) {
+    if (!url || !userId) {
         return res.status(400).json({ message: "Please provide all the required fields" });
     }
     let discordURL
@@ -37,13 +37,20 @@ PollingRouter.post("/create", async (req, res) => {
 });
 
 PollingRouter.post("/delete", async (req, res) => {
-    const { id } = req.body;
+    const { id, url } = req.body;
     if (!id) {
         return res.status(400).json({ message: "Please provide a valid id" });
     }
 
     try {
-        await removeLinkFromPollingQueue(id);
+        const LINK = await prisma.pollingLinks.delete({
+            where: {
+                id: id,
+                url: url,
+            },
+        });        
+        removeLinkFromPollingQueue(LINK.userId, url);
+
     } catch (error) {
         return res.status(500).json({ message: "Internal server error" });
     }
