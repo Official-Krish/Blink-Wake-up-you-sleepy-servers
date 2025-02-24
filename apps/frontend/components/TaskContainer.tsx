@@ -26,13 +26,14 @@ export default function TaskContainer() {
     }, []);
 
     async function deletePing(id: string) {
-        await axios.post(`/api/ping/delete`, { id });
+        await axios.post(`/api/ping/delete`, { id, url: pings.find((ping) => ping.id === id)?.url });
         setPings((prev) => prev.filter((ping) => ping.id !== id));
         setTaskLogsOpen((prev) => {
             const updated = { ...prev };
             delete updated[id];
             return updated;
         });
+        window.location.reload();
     }
 
     function toggleTaskDetails(id: string) {

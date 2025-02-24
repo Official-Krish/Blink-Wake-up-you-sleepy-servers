@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { Zap, Rocket, Bell, CirclePlus } from "lucide-react";
+import { Zap, Rocket, Bell } from "lucide-react";
 import { signIn } from "next-auth/react";
 
 export default function ProductSignIn() {
@@ -83,7 +83,7 @@ export default function ProductSignIn() {
                   </div>
                   <p className="text-gray-600 text-sm">
                     Built-in notification system to keep you updated about your
-                    project's status.
+                    project&apos;s status.
                   </p>
                 </CardContent>
               </Card>
@@ -138,16 +138,6 @@ export default function ProductSignIn() {
                     </defs>
                   </svg>
                   Get started with Google
-                </Button>
-              </CardContent>
-              <CardContent>
-                <Button
-                  variant="outline"
-                  className="w-full rounded-xl bg-white hover:bg-gray-50 text-gray-800 font-medium py-2 px-4transition duration-200 ease-in-out flex items-center justify-center"
-                  onClick={() => signIn("credentials")}
-                >
-                    <CirclePlus className="w-5 h-5 mr-2" />
-                    Get started with Email
                 </Button>
               </CardContent>
               <CardFooter className="text-center text-gray-400 text-sm">

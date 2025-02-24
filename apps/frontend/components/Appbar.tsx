@@ -6,12 +6,17 @@ import {
   useScroll,
   motion,
 } from "framer-motion";
-import { Github, House, Logs, Zap } from "lucide-react";
+import { Github, House, Zap } from "lucide-react";
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { Navlogin } from "./NavLogin";
 import { cn } from "@/lib/utils";
-import { signIn, useSession } from "next-auth/react";
+
+interface NavbarItem {
+  label: string;
+  link: string;
+  icon: React.ReactNode;
+}
 
 const NavbarData = [
   {
@@ -74,7 +79,7 @@ export const Appbar = () => {
   );
 };
 
-const DockMobile = ({ mobileClassName, NavbarData }: any) => {
+const DockMobile = ({ mobileClassName, NavbarData }: { mobileClassName: string; NavbarData: NavbarItem[] }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -82,7 +87,7 @@ const DockMobile = ({ mobileClassName, NavbarData }: any) => {
       <AnimatePresence>
         {open && (
           <motion.div className="absolute bottom-full mb-2 inset-x-0 flex flex-col gap-2 items-center z-50">
-            {NavbarData.map((item: any, idx: number) => (
+            {NavbarData.map((item: NavbarItem, idx: number) => (
               <motion.div
                 key={idx}
                 initial={{ opacity: 0, y: 10 }}
@@ -151,7 +156,6 @@ const SlideNavTabs = () => {
     width: 0,
     opacity: 1,
   });
-  const { data: session, status } = useSession();
 
   return (
     <div className="fixed right-0 left-0 top-5 z-30 mx-auto text-white bg-transparent">

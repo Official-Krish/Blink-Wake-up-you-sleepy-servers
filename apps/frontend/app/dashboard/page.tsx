@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { LogOut, Menu, Plus } from "lucide-react";
+import { LogOut, Plus } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import React from "react";
@@ -40,6 +40,30 @@ function DashboardHeader() {
     signOut();
     setIsLoggingOut(false);
   };
+
+  if (isLoggingOut) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full md:w-[85%] md:px-4 py-6 md:py-8 lg:px-8"
+      >
+        <div className="mx-auto max-w-7xl">
+          <div className="flex  sm:flex-row sm:items-center justify-between gap-4">
+            <motion.h1
+              className="text-3xl font-bold tracking-tight md:text-4xl text-center sm:text-left"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              Logging Out...
+            </motion.h1>
+          </div>
+        </div>
+      </motion.div>
+    );
+  }
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
@@ -70,7 +94,7 @@ function DashboardHeader() {
               variant="outline"
               size="icon"
               className="md:hidden bg-red-500"
-              onClick={() => signOut()}
+              onClick={() => handleLogout()}
             >
               <LogOut className=" h-4 w-4" />
             </Button>

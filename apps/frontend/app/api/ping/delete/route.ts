@@ -1,5 +1,4 @@
 import { authConfig } from "@/lib/auth";
-import { prisma } from "@repo/db/prisma";
 import axios from "axios";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";

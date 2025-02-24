@@ -29,7 +29,7 @@ export const authConfig = {
             return newSession!;
         },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        async jwt({ token, account }: any) {
+        async jwt({ token }: any) {
             const user = await prisma.user.findFirst({
                 where: {
                     

@@ -70,8 +70,8 @@ export default function AddTaskForm() {
         });
         console.log(repsonse);
       form.reset();
-    } catch (err: any) {
-      
+    } catch (err) {
+      console.error(err);
     } finally {
       setIsLoading(false);
     }

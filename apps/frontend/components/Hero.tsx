@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Coffee, Github, Twitter, Zap } from "lucide-react";
+import { ArrowRight, Coffee, Github, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 import { HoverBorderGradient } from "./ui/Hover-Border-Gradient";
 
@@ -105,7 +105,7 @@ export default function Hero() {
             ...Scale,
             transition: { ...Scale.transition, delay: 0.35 },
           }}
-          src="/images/ChaneThis.png"
+          src="/images/Home.png"
           alt="Landing page background"
           width={1512}
           height={1405}
