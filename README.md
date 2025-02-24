@@ -1,84 +1,90 @@
-# Turborepo starter
+# 🚀 INITBOT Wake Up You Sleepy Servers
 
-This Turborepo starter is maintained by the Turborepo core team.
+Cold Start Solver is a web application that helps mitigate the cold start problem for applications by optimizing caching, pre-warming infrastructure, and providing real-time alerts when the server is down.
 
-## Using this example
+## ✨ Features
+- **Cold Start Mitigation**: Reduces latency by preloading required resources.
+- **Turborepo Monorepo**: Efficient build system for faster development.
+- **Next.js & TypeScript**: Modern frontend framework with static and server-side rendering.
+- **Redis Caching**: Optimizes response time and data retrieval.
+- **Tailwind CSS**: Utility-first styling for rapid UI development.
+- **Email & Discord Notifications**: Sends alerts when the server is down.
 
-Run the following command:
+## 🛠️ Tech Stack
+- **Frontend**: Next.js, TypeScript, Tailwind CSS
+- **Backend**: Next.js API Routes
+- **Queue Management**: Redis
+- **Notifications**: Resend (Email), Discord Webhooks
+- **Monorepo Tooling**: Turborepo
+- **Database**: Prisma
 
-```sh
-npx create-turbo@latest
+## 🚀 Getting Started
+### Prerequisites
+Ensure you have the following installed:
+- Node.js (>= 18.x)
+- Redis (running instance)
+- Prisma Database (running instance)
+- A valid SMTP server for emails
+- A Discord webhook URL for notifications
+
+### Installation
+```bash
+git clone https://github.com/Official-Krish/Wake-up-you-sleepy-servers
+cd InitBot-wake-up-you-sleepy-servers
+pnpm install
 ```
 
-## What's inside?
-
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm build
+### Environment Variables
+Create a `.env` file in the root directory and configure the following:
+```Worker env
+REDIS_URL=
+REDIS_HOST=
+BACKEND_URL=
 ```
 
-### Develop
-
-To develop all apps and packages, run the following command:
-
+```BACKEND env
+REDIS_URL=
+REDIS_HOST=
+RESEND_API_KEY=
 ```
-cd my-turborepo
+
+```Frontend env
+NEXTAUTH_SECRET=
+NEXT_PUBLIC_BACKEND_URL=
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=
+NEXT_PUBLIC_GOOGLE_CLIENT_SECRET=
+```
+
+### Running the Project
+```bash
 pnpm dev
 ```
+The frontend will be available at http://localhost:3000
+The backend will be available at http://localhost:8000  
 
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
+### Deployment
+To deploy the application, use Vercel or any cloud provider that supports Next.js.
+```bash
+pnpm build
+pnpm start
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+## 📧 Notifications Setup
+- **Email Alerts**: Uses Nodemailer to send notifications when the server is down.
+- **Discord Alerts**: Utilizes Discord webhooks for instant alerts.
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+# Contributors
+We welcome contributions from the community! To contribute, follow these steps:
 
-```
-npx turbo link
-```
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/[feature-title]`).
+3. Make your changes and commit them (`git commit -am 'Add brief meaningful commit message'`).
+4. Push to the branch (`git push origin feature/[feature-title]`).
+5. Create a new Pull Request.
 
-## Useful Links
 
-Learn more about the power of Turborepo:
+## 📜 License
+This project is licensed under the MIT License.
 
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+---
+Made with ❤️ by Krish Anand
