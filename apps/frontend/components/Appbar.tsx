@@ -26,7 +26,7 @@ const NavbarData = [
   },
   {
     label: "GitHub",
-    link: "https://github.com/",
+    link: "https://github.com/Official-Krish/Wake-up-you-sleepy-servers",
     icon: <Github />,
   },
   // {

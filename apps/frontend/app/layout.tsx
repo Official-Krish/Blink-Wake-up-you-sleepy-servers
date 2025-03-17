@@ -4,6 +4,7 @@ import "./globals.css";
 import { Appbar } from "@/components/Appbar";
 import Providers from "./Providers";
 import { Footer } from "@/components/Footer";
+import { ToastContainer } from "react-toastify";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +32,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}
       >
         <Providers>
+          <ToastContainer/>
           <Appbar />
           {children}
           <Footer />

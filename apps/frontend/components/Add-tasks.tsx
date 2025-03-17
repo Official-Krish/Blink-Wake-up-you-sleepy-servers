@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/card";
 import { Globe, MessageSquare, AlertCircle, Loader2 } from "lucide-react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const formSchema = z.object({
   url: z
@@ -47,10 +48,11 @@ const formSchema = z.object({
     ),
 });
 
-export default function AddTaskForm() {
+export default function AddTaskForm({ onClose }: { onClose: () => void }) {
   const [showDiscordInput, setShowDiscordInput] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
+  const notify = () => toast("Task Added Successfully");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -68,6 +70,9 @@ export default function AddTaskForm() {
             notify: values.notify,
             discordUrl: values.discordUrl || "None",
         });
+        notify();
+        onClose();
+        window.location.reload();
         console.log(repsonse);
       form.reset();
     } catch (err) {

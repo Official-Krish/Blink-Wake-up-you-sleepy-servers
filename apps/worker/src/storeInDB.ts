@@ -4,7 +4,8 @@ import { prisma } from "@repo/db/prisma";
 const storePollingResultInDatabase = async (url: string, PolledStatus: string, timestamp: number, userId: string): Promise<void> => {
     const linkExists = await checkIfLinkExists(url, userId);
     if (!linkExists) {
-        throw new Error(`Polling link ${url} not found for user ${userId}`);
+        console.error(`Polling link ${url} not found in Redis for user ${userId}`);
+        return;
     }
     console.log(`Storing polling result for ${url} in database...`);
     try {

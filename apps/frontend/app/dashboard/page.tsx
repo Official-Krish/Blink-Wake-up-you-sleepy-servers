@@ -132,7 +132,7 @@ function DashboardHeader() {
         isOpen={isOpen}
         handleClose={() => setIsOpen(false)}
       >
-        <AddTaskForm />
+        <AddTaskForm onClose={() => setIsOpen(false)} />
       </SheetWrapper>
     </motion.div>
   );

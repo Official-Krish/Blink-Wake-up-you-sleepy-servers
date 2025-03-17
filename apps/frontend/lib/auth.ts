@@ -18,7 +18,7 @@ export const authConfig = {
             clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
         }),
     ],
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: process.env.NEXT_PUBLIC_AUTH_SECRET,
     callbacks: {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         session: ({ session, token }: any): session => {

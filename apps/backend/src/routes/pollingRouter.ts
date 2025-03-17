@@ -39,7 +39,8 @@ PollingRouter.post("/create", async (req, res) => {
 PollingRouter.post("/delete", async (req, res) => {
     const { id, url } = req.body;
     if (!id) {
-        return res.status(400).json({ message: "Please provide a valid id" });
+        res.status(400).json({ message: "Please provide a valid id" });
+        return;
     }
 
     try {
@@ -50,8 +51,11 @@ PollingRouter.post("/delete", async (req, res) => {
             },
         });        
         removeLinkFromPollingQueue(LINK.userId, url);
+        res.status(200).json({ message: "Polling deleted successfully" });
+        return;
 
     } catch (error) {
-        return res.status(500).json({ message: "Internal server error" });
+        res.status(500).json({ message: "Internal server error" });
+        return;
     }
 });

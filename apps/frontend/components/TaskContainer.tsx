@@ -3,6 +3,7 @@ import { ChevronDown, ChevronUp, CircleArrowUp, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { TaskLogs } from "./TaskLogs";
 import { Button } from "./ui/button";
+import { toast } from "react-toastify";
 
 interface Ping {
     id: string;
@@ -15,6 +16,8 @@ export default function TaskContainer() {
     const [pings, setPings] = useState<Ping[]>([]);
     const [taskLogsOpen, setTaskLogsOpen] = useState<{ [key: string]: boolean }>({});
 
+    const notify = () => toast("Task deleted successfully");
+
     async function fetchPings() {
         const response = await axios.get("/api/ping/getAll");
         const data = await response.data;
@@ -26,14 +29,20 @@ export default function TaskContainer() {
     }, []);
 
     async function deletePing(id: string) {
-        await axios.post(`/api/ping/delete`, { id, url: pings.find((ping) => ping.id === id)?.url });
-        setPings((prev) => prev.filter((ping) => ping.id !== id));
-        setTaskLogsOpen((prev) => {
-            const updated = { ...prev };
-            delete updated[id];
-            return updated;
-        });
-        window.location.reload();
+        try {
+            const res = await axios.post(`/api/ping/delete`, { id, url: pings.find((ping) => ping.id === id)?.url });
+            setPings((prev) => prev.filter((ping) => ping.id !== id));
+            setTaskLogsOpen((prev) => {
+                const updated = { ...prev };
+                delete updated[id];
+                return updated;
+            });
+            if(res.status === 200){
+                notify();
+            }
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     function toggleTaskDetails(id: string) {
