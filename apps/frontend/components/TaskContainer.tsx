@@ -3,7 +3,7 @@ import { ChevronDown, ChevronUp, CircleArrowUp, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { TaskLogs } from "./TaskLogs";
 import { Button } from "./ui/button";
-import { toast } from "react-toastify";
+import { Bounce, toast } from "react-toastify";
 
 interface Ping {
     id: string;
@@ -15,8 +15,6 @@ interface Ping {
 export default function TaskContainer() {
     const [pings, setPings] = useState<Ping[]>([]);
     const [taskLogsOpen, setTaskLogsOpen] = useState<{ [key: string]: boolean }>({});
-
-    const notify = () => toast("Task deleted successfully");
 
     async function fetchPings() {
         const response = await axios.get("/api/ping/getAll");
@@ -38,9 +36,30 @@ export default function TaskContainer() {
                 return updated;
             });
             if(res.status === 200){
-                notify();
+                toast.success('Task deleted successfully', {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
             }
         } catch (error) {
+            toast.error('Something went wrong', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
             console.error(error);
         }
     }

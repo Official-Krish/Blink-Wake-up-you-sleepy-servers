@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/card";
 import { Globe, MessageSquare, AlertCircle, Loader2 } from "lucide-react";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { toast, Bounce } from "react-toastify";
 
 const formSchema = z.object({
   url: z
@@ -52,7 +52,6 @@ export default function AddTaskForm({ onClose }: { onClose: () => void }) {
   const [showDiscordInput, setShowDiscordInput] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const notify = () => toast("Task Added Successfully");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -65,17 +64,37 @@ export default function AddTaskForm({ onClose }: { onClose: () => void }) {
   async function handleSubmit(values: z.infer<typeof formSchema>) {
     try {
         console.log(values);
-        const repsonse = await axios.post("/api/ping", {
+        await axios.post("/api/ping", {
             url: values.url,
             notify: values.notify,
             discordUrl: values.discordUrl || "None",
         });
-        notify();
+        toast.success('Task Added Successfully', {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          progress: undefined,
+          theme: "dark",
+          transition: Bounce,
+        });
         onClose();
         window.location.reload();
-        console.log(repsonse);
       form.reset();
     } catch (err) {
+      toast.error('Something went wrong', {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      });
       console.error(err);
     } finally {
       setIsLoading(false);
