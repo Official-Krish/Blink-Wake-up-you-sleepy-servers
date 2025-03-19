@@ -73,7 +73,7 @@ userRouter.post("/login", async (req, res) => {
             return res.status(400).json({ message: "Invalid email or password" });
         }
 
-        const isPasswordCorrect = await bcrypt.compare(result.data.password, user.password);
+        const isPasswordCorrect = user.password && await bcrypt.compare(result.data.password, user.password);
 
         if (!isPasswordCorrect) {
             return res.status(400).json({ message: "Invalid email or password" });

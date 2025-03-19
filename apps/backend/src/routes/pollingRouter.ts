@@ -21,7 +21,6 @@ PollingRouter.post("/create", async (req, res) => {
         await prisma.pollingLinks.create({ 
             data: { 
                 url, 
-                pollingId: userId, 
                 notify: notify,
                 discordUrl: discordURL,
                 User: {

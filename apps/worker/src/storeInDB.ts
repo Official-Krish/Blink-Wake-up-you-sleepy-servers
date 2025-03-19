@@ -1,7 +1,7 @@
 import { redis } from "./index";
 import { prisma } from "@repo/db/prisma";
 
-const storePollingResultInDatabase = async (url: string, PolledStatus: string, timestamp: number, userId: string): Promise<void> => {
+const storePollingResultInDatabase = async (url: string, PolledStatus: string, timestamp: number, userId: string, latency: string): Promise<void> => {
     const linkExists = await checkIfLinkExists(url, userId);
     if (!linkExists) {
         console.error(`Polling link ${url} not found in Redis for user ${userId}`);
@@ -20,18 +20,14 @@ const storePollingResultInDatabase = async (url: string, PolledStatus: string, t
             if (!findPollingLink) {
                 console.error(`Polling link ${url} not found for user ${userId}`);
                 throw new Error(`Polling link ${url} not found for user ${userId}`);
-            }
+            }  
 
-            await prisma.polling_History.upsert({
-                where: { pollingId: findPollingLink.id },
-                update: {
-                    LastPolledStatus: PolledStatus,
-                    PolledAt: new Date(timestamp),
-                },
-                create: {
+            await prisma.polling_History.create({
+                data: {
                     url,
-                    LastPolledStatus: PolledStatus,
-                    PolledAt: new Date(timestamp),
+                    status: PolledStatus === 'UP' ? 'UP' : 'DOWN',
+                    responseTime: parseFloat(latency),
+                    CheckedAt: new Date(timestamp),
                     pollingId: findPollingLink.id,
                 },
             });
@@ -49,8 +45,8 @@ export const syncResultsToDatabase = async (): Promise<void> => {
       const result = await redis.lpop('pollingResults');
       if (!result) break;
   
-      const { url, PolledStatus, timestamp, userId } = JSON.parse(result);
-      await storePollingResultInDatabase(url, PolledStatus, timestamp, userId);
+      const { url, PolledStatus, timestamp, userId, latency } = JSON.parse(result);
+      await storePollingResultInDatabase(url, PolledStatus, timestamp, userId, latency);
     }
 };
 

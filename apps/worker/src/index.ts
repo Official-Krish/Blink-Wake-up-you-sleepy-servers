@@ -25,7 +25,7 @@ const fetchAndRescheduleTask = async (): Promise<{ id: string; url: string; inte
         1, 
         'pollingQueue', // Key name
         now, // ARGV[1]: Current timestamp
-        now + 1000 * 60 * 5 // ARGV[2]: Next polling time (e.g., 5 minute later)
+        now + 1000 * 60  // ARGV[2]: Next polling time (e.g., 5 minute later)
     );
 
     return task ? JSON.parse(task as string) : null;
@@ -35,7 +35,10 @@ const fetchAndRescheduleTask = async (): Promise<{ id: string; url: string; inte
 
 const pollLink = async (url: string, userId: string): Promise<void> => {
     try {
+        const startTime = Date.now();
         const response = await axios.get(url);
+        const endTime = Date.now();
+        const latency = (endTime - startTime).toString();
         console.log("Polling successful", url);
 
         let PolledStatus: string;
@@ -50,7 +53,7 @@ const pollLink = async (url: string, userId: string): Promise<void> => {
         } else {
             PolledStatus = "UP";
         }
-        await storePollingResultInRedis(url, PolledStatus, userId);
+        await storePollingResultInRedis(url, PolledStatus, userId, latency);
     } catch (error) {
         await axios.post(`${process.env.BACKEND_URL}/SendNoti`, {
             ueerId: userId,
@@ -61,9 +64,9 @@ const pollLink = async (url: string, userId: string): Promise<void> => {
     }
 }
 
-const storePollingResultInRedis = async (url: string, PolledStatus: string, userId: string): Promise<void> => {
+const storePollingResultInRedis = async (url: string, PolledStatus: string, userId: string, latency: String): Promise<void> => {
     console.log("Storing polling result in Redis", url);
-    await redis.rpush('pollingResults', JSON.stringify({ url, PolledStatus, timestamp: Date.now(), userId }));
+    await redis.rpush('pollingResults', JSON.stringify({ url, PolledStatus, timestamp: Date.now(), userId, latency }));
   };
 
 const startWorker = async (): Promise<void> => {
@@ -83,4 +86,4 @@ const startWorker = async (): Promise<void> => {
 }
 
 startWorker();
-setInterval(syncResultsToDatabase, 1000 * 60 * 10); // Sync results to database every 10 minutes
+setInterval(syncResultsToDatabase, 1000 * 60 ); // Sync results to database every 10 minutes

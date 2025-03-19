@@ -23,22 +23,29 @@ model User {
 }
 
 model PollingLinks {
-  id        String     @id @default(uuid())
-  userId    String
-  pollingId String
-  url       String
-  notify    Boolean    @default(false)
+  id         String     @id @default(uuid())
+  userId     String
+  url        String
+  notify     Boolean    @default(false)
   discordUrl String?
-  createdAt DateTime   @default(now())
-  User      User       @relation(fields: [userId], references: [id])
-  Polling   Polling_History?    
+  createdAt  DateTime   @default(now())
+  User       User       @relation(fields: [userId], references: [id])
+  Polling    Polling_History[]  
 }
 
 model Polling_History {
-  id                  String     @id @default(uuid())
+  id                  String           @id @default(uuid())
+  title               String           @default("No Title")
   url                 String
-  LastPolledStatus    String     @default("Polling will start Soon")
-  PolledAt            DateTime
-  pollingId           String     @unique
-  Polling             PollingLinks @relation(fields: [pollingId], references: [id], onDelete: Cascade)
+  status              PolledStatus     @default(UNKNOWN)
+  CheckedAt           DateTime
+  responseTime        Float?
+  pollingId           String           
+  Polling             PollingLinks     @relation(fields: [pollingId], references: [id], onDelete: Cascade)
+}
+
+enum PolledStatus {
+  UP
+  DOWN
+  UNKNOWN
 }

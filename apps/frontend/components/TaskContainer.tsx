@@ -8,8 +8,8 @@ import { Bounce, toast } from "react-toastify";
 interface Ping {
     id: string;
     url: string;
-    LastPolledStatus: string;
-    PolledAt: string;
+    status: string;
+    CheckedAt: string;
 }
 
 export default function TaskContainer() {
@@ -80,7 +80,7 @@ export default function TaskContainer() {
                             <p className="text-xl text-white font-semibold">{ping.url}</p>
                             <div className="flex space-x-3">
                                 <div className="flex items-center">
-                                    <div className={`h-3 w-3 rounded-full mr-3 ${ping.LastPolledStatus === "UP" ? "bg-green-500" : "bg-red-500"}`}></div>
+                                    <div className={`h-3 w-3 rounded-full mr-3 ${ping.status === "UP" ? "bg-green-500" : "bg-red-500"}`}></div>
                                 </div>
                                 <Button variant="default" onClick={() => toggleTaskDetails(ping.id)}>
                                     {taskLogsOpen[ping.id] ? <ChevronUp /> : <ChevronDown />}
@@ -91,7 +91,7 @@ export default function TaskContainer() {
                             </div>
                         </div>
                         {taskLogsOpen[ping.id] && (
-                            <TaskLogs Server={ping.LastPolledStatus} Last_Polled={ping.PolledAt} />
+                            <TaskLogs Server={ping.status} Last_Polled={ping.CheckedAt} />
                         )}
                     </div>
                 ))

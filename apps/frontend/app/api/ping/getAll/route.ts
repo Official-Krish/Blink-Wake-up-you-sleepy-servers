@@ -23,8 +23,8 @@ export async function GET() {
         });
         const data = pings.map((ping) => ({
             ...ping,
-            LastPolledStatus: pollHistory.find((history) => history.pollingId === ping.id)?.LastPolledStatus,
-            PolledAt: pollHistory.find((history) => history.pollingId === ping.id)?.PolledAt.toString(),
+            status: pollHistory.find((history) => history.pollingId === ping.id)?.status,
+            checkedAt: pollHistory.find((history) => history.pollingId === ping.id)?.CheckedAt.toString(),
         }));
         return NextResponse.json(data);
     } catch (error) {
