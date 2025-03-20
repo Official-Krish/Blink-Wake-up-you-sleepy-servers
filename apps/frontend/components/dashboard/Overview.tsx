@@ -3,6 +3,7 @@ import { XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Area, AreaCh
 import { LatencyChart } from "./LatencyChart";
 import { AlertTriangle, XCircle } from "lucide-react";
 import { Badge } from "../ui/badge";
+import { LatencyData } from "@/lib/types";
 
 interface latencyStats {
     average: number;
@@ -10,7 +11,7 @@ interface latencyStats {
     min: number;
 }
 
-export default function Overview({ healthHistory, latencyStats, timeRange, latencyData }: { healthHistory: any[], latencyStats: latencyStats, timeRange: string, latencyData: any[] }) {
+export default function Overview({ healthHistory, latencyStats, timeRange, latencyData }: { healthHistory: any[], latencyStats: latencyStats, timeRange: string, latencyData: LatencyData[] }) {
     return (
       <div>
         <Card className="bg-white/5 border-0">
@@ -60,7 +61,7 @@ export default function Overview({ healthHistory, latencyStats, timeRange, laten
             </div>
             <div className="flex justify-center gap-8 mt-4">
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-success"></div>
+                <div className="w-3 h-3 rounded-full bg-"></div>
                 <div className="text-sm">Online</div>
               </div>
               <div className="flex items-center gap-2">
@@ -75,7 +76,7 @@ export default function Overview({ healthHistory, latencyStats, timeRange, laten
           </CardContent>
         </Card>
 
-            {/* Latency Chart (reusing existing component) */}
+        {/* Latency Chart (reusing existing component) */}
         <LatencyChart
           title={`Response Time (${timeRange})`}
           data={latencyData}

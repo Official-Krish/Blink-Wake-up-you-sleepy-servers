@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Button } from '@/components/ui/button';
-import { calculateLatencyStats, findClosestDataPoint } from '@/lib/DetailedAnalysisHelper';
+import { calculateLatencyStats, findClosestDataPoint, findClosestDataPoint2, formatTime } from '@/lib/DetailedAnalysisHelper';
 import { useParams } from 'next/navigation';
 import TopBar from '@/components/dashboard/TopBar';
 import MetricCard from '@/components/dashboard/MetricsCard';
 import DashboardTabs from '@/components/dashboard/Tabs';
 import axios from 'axios';
-import { LatencyData, WebsiteData } from '@/lib/types';
+import { HealthHistoryData, LatencyData, WebsiteData } from '@/lib/types';
 
 const WebsiteDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -37,12 +37,31 @@ const WebsiteDetails = () => {
   }, [id]);
   
   useEffect(() => {
-    setLatencyData(website.map((site: WebsiteData) => {
-      return {
+    const hourMultiplier = timeRange === '24h' ? 1 : timeRange === '7d' ? 7 : 30;
+    const dataPoints = timeRange === '24h' ? 24 : timeRange === '7d' ? 28 : 30;
+
+    let latencyData: any[] = [];
+    website.map((site: WebsiteData) => {
+      latencyData.push({
         responseTime: site.responseTime,
         CheckedAt: site.CheckedAt
-      }
-    }));
+      })
+    });
+
+    for (let i = dataPoints; i >= 0; i--) {
+      const time = new Date();
+      time.setHours(time.getHours() - (i * hourMultiplier));
+      
+      // Find the closest data point in time from the API data
+      const closestDataPoint = findClosestDataPoint2(latencyData, time);
+      
+      latencyData.push({
+        value: closestDataPoint ? closestDataPoint.responseTime : 0,
+        time: formatTime(closestDataPoint?.CheckedAt || time.toISOString()) 
+      });
+    }
+    setLatencyData(latencyData);
+
 
     const latencyStats: number[] = website.map((site: WebsiteData) => {
       return site.responseTime
@@ -52,8 +71,25 @@ const WebsiteDetails = () => {
 
 
     // Generate health history (up/down/degraded status over time)
-    const hourMultiplier = timeRange === '24h' ? 1 : timeRange === '7d' ? 7 : 30;
-    const dataPoints = timeRange === '24h' ? 24 : timeRange === '7d' ? 28 : 30;
+    let data: HealthHistoryData[] = [];
+    website.map((site: WebsiteData) => {
+      if (site.status === 'UP') {
+        data.push({
+          time: site.CheckedAt,
+          status: 'Up'
+        });
+      } else if (site.status === 'DOWN') {
+        data.push({
+          time: site.CheckedAt,
+          status: 'Down'
+        });
+      } else if (site.status === 'UNKNOWN') {
+        data.push({
+          time: site.CheckedAt,
+          status: 'Unknown'
+        });
+      }
+    });
     const healthData = [];
     
     for (let i = dataPoints; i >= 0; i--) {
@@ -61,7 +97,7 @@ const WebsiteDetails = () => {
       time.setHours(time.getHours() - (i * hourMultiplier));
       
       // Find the closest data point in time from the API data
-      const closestDataPoint = findClosestDataPoint(website, time);
+      const closestDataPoint = findClosestDataPoint(data, time);
       
       healthData.push({
         time: timeRange === '24h' 
@@ -70,7 +106,6 @@ const WebsiteDetails = () => {
         status: closestDataPoint?.status || 'unknown'
       });
     }
-
 
     setHealthHistory(healthData);
     
@@ -91,25 +126,24 @@ const WebsiteDetails = () => {
     }
     setResourceUsage(resourceData);
     
-    // Generate page load time data
-    const loadTimeData = [];
-    for (let i = dataPoints; i >= 0; i--) {
-      const time = new Date();
-      time.setHours(time.getHours() - (i * hourMultiplier));
+    // const loadTimeData = [];
+    // for (let i = dataPoints; i >= 0; i--) {
+    //   const time = new Date();
+    //   time.setHours(time.getHours() - (i * hourMultiplier));
       
-      // Find the closest data point in time
-      const closestDataPoint = findClosestDataPoint(website, time);
+    //   // Find the closest data point in time
+    //   const closestDataPoint = findClosestDataPoint(website, time);
       
-      loadTimeData.push({
-        time: timeRange === '24h' 
-          ? time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-          : time.toLocaleDateString([], { month: 'short', day: 'numeric' }),
-        html: closestDataPoint ? Math.floor(closestDataPoint.responseTime * 0.3) : 300,
-        resources: closestDataPoint ? Math.floor(closestDataPoint.responseTime * 0.6) : 600,
-        ttfb: closestDataPoint ? Math.floor(closestDataPoint.responseTime * 0.1) : 100
-      });
-    }
-    setLoadTime(loadTimeData);
+    //   loadTimeData.push({
+    //     time: timeRange === '24h' 
+    //       ? time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    //       : time.toLocaleDateString([], { month: 'short', day: 'numeric' }),
+    //     html: closestDataPoint ? Math.floor(closestDataPoint.responseTime * 0.3) : 300,
+    //     resources: closestDataPoint ? Math.floor(closestDataPoint.responseTime * 0.6) : 600,
+    //     ttfb: closestDataPoint ? Math.floor(closestDataPoint.responseTime * 0.1) : 100
+    //   });
+    // }
+    // setLoadTime(loadTimeData);
 
     const upTime = website.filter(w => w.status === 'UP').length;
     const totalMonitors = website.length;

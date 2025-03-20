@@ -1,14 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LatencyData } from "@/lib/types";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-
-interface LatencyDataPoint {
-  time: string;
-  value: number;
-}
 
 interface LatencyChartProps {
   title: string;
-  data: LatencyDataPoint[];
+  data: LatencyData[];
   average: number;
   max: number;
   min: number;
@@ -40,6 +36,14 @@ export const LatencyChart: React.FC<LatencyChartProps> = ({
         <CardTitle className="text-base font-medium">{title}</CardTitle>
       </CardHeader>
       <CardContent>
+        {/* <div>
+          {data.map((point, index) => (
+            <div key={index} className="flex items-center justify-between">
+              <p className="text-xs text-muted-foreground text-white">{point.CheckedAt}</p>
+              <p className="text-lg font-medium text-white">{point.responseTime} ms</p>
+            </div>
+          ))}
+        </div> */}
         <div className="h-[200px] mt-4">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart

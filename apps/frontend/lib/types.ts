@@ -11,3 +11,8 @@ export type LatencyData = {
     responseTime: number;
     CheckedAt: string;
 }
+
+export interface HealthHistoryData {
+    time: string;
+    status: string;
+}

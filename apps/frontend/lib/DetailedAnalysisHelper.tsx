@@ -1,4 +1,4 @@
-import { WebsiteData } from "@/lib/types";
+import { HealthHistoryData, LatencyData, WebsiteData } from "@/lib/types";
   
   export const serverData = [
     {
@@ -75,18 +75,53 @@ import { WebsiteData } from "@/lib/types";
   };
   
 
-export function findClosestDataPoint (data: WebsiteData[], targetTime: Date): WebsiteData | null {
+export function findClosestDataPoint(data: HealthHistoryData[], targetTime: Date): HealthHistoryData | null {
     if (!data || data.length === 0) return null;
     
+    // Ensure targetTime is properly handled
+    const targetTimeMs = targetTime.getTime();
+    
     return data.reduce((closest, current) => {
-      const currentDate = new Date(current.CheckedAt);
-      const closestDate = closest ? new Date(closest.CheckedAt) : null;
+      // Explicitly parse the ISO string to ensure consistent handling
+      const currentDate = new Date(current.time);
+      const currentTimeMs = currentDate.getTime();
       
-      if (!closestDate) return current;
+      if (!closest) return current;
       
-      const currentDiff = Math.abs(currentDate.getTime() - targetTime.getTime());
-      const closestDiff = Math.abs(closestDate.getTime() - targetTime.getTime());
+      const closestDate = new Date(closest.time);
+      const closestTimeMs = closestDate.getTime();
+      
+      const currentDiff = Math.abs(currentTimeMs - targetTimeMs);
+      const closestDiff = Math.abs(closestTimeMs - targetTimeMs);
       
       return currentDiff < closestDiff ? current : closest;
-    }, null as WebsiteData | null);
-  };
+    }, null as HealthHistoryData | null);
+}
+
+export function findClosestDataPoint2(data: LatencyData[], targetTime: Date): LatencyData | null {
+  if (!data || data.length === 0) return null;
+  
+  // Ensure targetTime is properly handled
+  const targetTimeMs = targetTime.getTime();
+  
+  return data.reduce((closest, current) => {
+    // Explicitly parse the ISO string to ensure consistent handling
+    const currentDate = new Date(current.CheckedAt);
+    const currentTimeMs = currentDate.getTime();
+    
+    if (!closest) return current;
+    
+    const closestDate = new Date(closest.CheckedAt);
+    const closestTimeMs = closestDate.getTime();
+    
+    const currentDiff = Math.abs(currentTimeMs - targetTimeMs);
+    const closestDiff = Math.abs(closestTimeMs - targetTimeMs);
+    
+    return currentDiff < closestDiff ? current : closest;
+  }, null as LatencyData | null);
+}
+
+export function formatTime(timestamp: string): string {
+  const date = new Date(timestamp);
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
