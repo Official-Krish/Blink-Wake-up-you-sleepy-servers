@@ -1,8 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ResourceUsageData } from "@/lib/types";
 import { Activity, Calendar, Cpu, HardDrive, RotateCcw, Server } from "lucide-react";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-export default function Resources({ resourceUsage }: { resourceUsage: any[] }) {
+export default function Resources({ resourceUsage }: { resourceUsage: ResourceUsageData[] }) {
     return <div>
         <Card className="bg-white/5 border-0">
               <CardHeader className="pb-2">

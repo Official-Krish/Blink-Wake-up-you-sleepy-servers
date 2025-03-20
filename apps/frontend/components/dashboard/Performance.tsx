@@ -2,8 +2,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Badge } from "../ui/badge";
 import { Progress } from "../ui/progress";
+import { LoadTimeData } from "@/lib/types";
 
-export default function Performance({ loadTime }: { loadTime: any[] }) {
+export default function Performance({ loadTime }: { loadTime: LoadTimeData[] }) {
     return (
         <div>
             <Card className="bg-white/5 border-0">

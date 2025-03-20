@@ -64,13 +64,11 @@ import { HealthHistoryData, LatencyData, WebsiteData } from "@/lib/types";
   };
   
   // Calculate latency statistics
-  export const calculateLatencyStats = (data: { value: number }[]) => {
-    const values = data.map(item => item.value);
-    
+  export function calculateLatencyStats (data: number[]) {
     return {
-      average: Math.round(values.reduce((sum, val) => sum + val, 0) / values.length),
-      max: Math.max(...values),
-      min: Math.min(...values)
+      max: Math.max(...data),
+      min: Math.min(...data),
+      average: Math.round(data.reduce((sum, val) => sum + val, 0) / data.length)
     };
   };
   
@@ -106,12 +104,12 @@ export function findClosestDataPoint2(data: LatencyData[], targetTime: Date): La
   
   return data.reduce((closest, current) => {
     // Explicitly parse the ISO string to ensure consistent handling
-    const currentDate = new Date(current.CheckedAt);
+    const currentDate = new Date(current.time);
     const currentTimeMs = currentDate.getTime();
     
     if (!closest) return current;
     
-    const closestDate = new Date(closest.CheckedAt);
+    const closestDate = new Date(closest.time);
     const closestTimeMs = closestDate.getTime();
     
     const currentDiff = Math.abs(currentTimeMs - targetTimeMs);

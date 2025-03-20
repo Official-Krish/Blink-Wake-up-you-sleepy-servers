@@ -3,8 +3,9 @@ import Overview from "./Overview";
 import Performance from "./Performance";
 import Resources from "./Resources";
 import Health from "./Health";
+import { HealthHistoryData, LatencyData, latencyStats, LoadTimeData, ResourceUsageData } from "@/lib/types";
 
-export default function DashboardTabs({ healthHistory, latencyData, latencyStats, resourceUsage, timeRange, loadTime }: { healthHistory: any[], latencyData: any[], latencyStats: any, resourceUsage: any[], timeRange: string, loadTime: any[] }) {
+export default function DashboardTabs({ healthHistory, latencyData, latencyStats, resourceUsage, timeRange, loadTime }: { healthHistory: HealthHistoryData[], latencyData: LatencyData[], latencyStats: latencyStats, resourceUsage: ResourceUsageData[], timeRange: string, loadTime: LoadTimeData[] }) {
     return <div>
         <Tabs defaultValue="overview" className="w-full">
           <TabsList className="mb-6">

@@ -8,18 +8,18 @@ import TopBar from '@/components/dashboard/TopBar';
 import MetricCard from '@/components/dashboard/MetricsCard';
 import DashboardTabs from '@/components/dashboard/Tabs';
 import axios from 'axios';
-import { HealthHistoryData, LatencyData, WebsiteData } from '@/lib/types';
+import { HealthHistoryData, LatencyData, latencyStats, LoadTimeData, ResourceUsageData, WebsiteData, WebsiteWithUptime } from '@/lib/types';
 
 const WebsiteDetails = () => {
   const { id } = useParams<{ id: string }>();
   const [website, setWebsite] = useState<WebsiteData[]>([]);
   const [latencyData, setLatencyData] = useState<LatencyData[]>([]);
-  const [latencyStats, setLatencyStats] = useState<any>(null);
-  const [healthHistory, setHealthHistory] = useState<any[]>([]);
-  const [resourceUsage, setResourceUsage] = useState<any[]>([]);
-  const [loadTime, setLoadTime] = useState<any[]>([]);
+  const [latencyStats, setLatencyStats] = useState<latencyStats>();
+  const [healthHistory, setHealthHistory] = useState<HealthHistoryData[]>([]);
+  const [resourceUsage, setResourceUsage] = useState<ResourceUsageData[]>([]);
+  const [loadTime, setLoadTime] = useState<LoadTimeData[]>([]);
   const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d'>('24h');
-  const [websiteData, setWebsiteData] = useState<any>(null);
+  const [websiteWithUptime, setWebsiteDataWithUptime] = useState<WebsiteWithUptime>();
 
   async function getWebsiteDetails() {
     try {
@@ -40,14 +40,15 @@ const WebsiteDetails = () => {
     const hourMultiplier = timeRange === '24h' ? 1 : timeRange === '7d' ? 7 : 30;
     const dataPoints = timeRange === '24h' ? 24 : timeRange === '7d' ? 28 : 30;
 
-    let latencyData: any[] = [];
+    const latencyData: LatencyData[] = [];
     website.map((site: WebsiteData) => {
       latencyData.push({
-        responseTime: site.responseTime,
-        CheckedAt: site.CheckedAt
+        value: site.responseTime,
+        time: site.CheckedAt
       })
     });
 
+    const LatencyData: LatencyData[] = [];
     for (let i = dataPoints; i >= 0; i--) {
       const time = new Date();
       time.setHours(time.getHours() - (i * hourMultiplier));
@@ -55,23 +56,23 @@ const WebsiteDetails = () => {
       // Find the closest data point in time from the API data
       const closestDataPoint = findClosestDataPoint2(latencyData, time);
       
-      latencyData.push({
-        value: closestDataPoint ? closestDataPoint.responseTime : 0,
-        time: formatTime(closestDataPoint?.CheckedAt || time.toISOString()) 
+      LatencyData.push({
+        value: closestDataPoint ? closestDataPoint.value : 0,
+        time: formatTime(closestDataPoint?.time || time.toISOString()) 
       });
     }
-    setLatencyData(latencyData);
+    setLatencyData(LatencyData);
 
-
-    const latencyStats: number[] = website.map((site: WebsiteData) => {
-      return site.responseTime
+    const latencyStatsData: number[] = [];
+    website.map((site: WebsiteData) => {
+      latencyStatsData.push(site.responseTime);
     });
-    setLatencyStats(calculateLatencyStats(latencyStats.map(stat => ({ value: stat }))));
+    setLatencyStats(calculateLatencyStats(latencyStatsData));
     
 
 
     // Generate health history (up/down/degraded status over time)
-    let data: HealthHistoryData[] = [];
+    const data: HealthHistoryData[] = [];
     website.map((site: WebsiteData) => {
       if (site.status === 'UP') {
         data.push({
@@ -90,7 +91,7 @@ const WebsiteDetails = () => {
         });
       }
     });
-    const healthData = [];
+    const healthData: HealthHistoryData[] = [];
     
     for (let i = dataPoints; i >= 0; i--) {
       const time = new Date();
@@ -110,7 +111,8 @@ const WebsiteDetails = () => {
     setHealthHistory(healthData);
     
     // Generate resource usage data (CPU, Memory, Disk)
-    const resourceData = [];
+    //TODO: Replace with actual data from the API
+    const resourceData: ResourceUsageData[] = [];
     for (let i = dataPoints; i >= 0; i--) {
       const time = new Date();
       time.setHours(time.getHours() - (i * hourMultiplier));
@@ -126,29 +128,26 @@ const WebsiteDetails = () => {
     }
     setResourceUsage(resourceData);
     
-    // const loadTimeData = [];
-    // for (let i = dataPoints; i >= 0; i--) {
-    //   const time = new Date();
-    //   time.setHours(time.getHours() - (i * hourMultiplier));
+    //TODO: Replace with actual data from the API
+    const loadTimeData: LoadTimeData[] = [];
+    for (let i = dataPoints; i >= 0; i--) {
+      const time = new Date();
+      time.setHours(time.getHours() - (i * hourMultiplier));
       
-    //   // Find the closest data point in time
-    //   const closestDataPoint = findClosestDataPoint(website, time);
-      
-    //   loadTimeData.push({
-    //     time: timeRange === '24h' 
-    //       ? time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    //       : time.toLocaleDateString([], { month: 'short', day: 'numeric' }),
-    //     html: closestDataPoint ? Math.floor(closestDataPoint.responseTime * 0.3) : 300,
-    //     resources: closestDataPoint ? Math.floor(closestDataPoint.responseTime * 0.6) : 600,
-    //     ttfb: closestDataPoint ? Math.floor(closestDataPoint.responseTime * 0.1) : 100
-    //   });
-    // }
-    // setLoadTime(loadTimeData);
+      loadTimeData.push({
+        time: timeRange === '24h' 
+          ? time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          : time.toLocaleDateString([], { month: 'short', day: 'numeric' }),
+        html: Math.floor(Math.random() * 400) + 200,
+        resources: Math.floor(Math.random() * 800) + 400,
+        ttfb: Math.floor(Math.random() * 150) + 50
+      });
+    }
+    setLoadTime(loadTimeData);
 
     const upTime = website.filter(w => w.status === 'UP').length;
     const totalMonitors = website.length;
-    console.log("uptime", (upTime / totalMonitors) * 100);
-    setWebsiteData({ 
+    setWebsiteDataWithUptime({ 
       ...website[0],
       uptime: (upTime / totalMonitors) * 100,
     });
@@ -172,7 +171,7 @@ const WebsiteDetails = () => {
         <TopBar website={website[0]} />
         
         {/* Top metrics cards */}
-        <MetricCard website={websiteData} latencyStats={latencyStats} resourceUsage={resourceUsage} />
+        <MetricCard website={websiteWithUptime!} latencyStats={latencyStats!} resourceUsage={resourceUsage} />
         
         {/* Time range selector */}
         <div className="flex justify-end">
@@ -205,7 +204,7 @@ const WebsiteDetails = () => {
         </div>
         
         {/* Tabs for different charts and metrics */}
-        <DashboardTabs healthHistory={healthHistory} latencyData={latencyData} latencyStats={latencyStats} resourceUsage={resourceUsage} timeRange={timeRange} loadTime={loadTime} />
+        <DashboardTabs healthHistory={healthHistory} latencyData={latencyData} latencyStats={latencyStats!} resourceUsage={resourceUsage} timeRange={timeRange} loadTime={loadTime} />
         
       </div>
     </DashboardLayout>

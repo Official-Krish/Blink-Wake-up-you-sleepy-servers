@@ -3,15 +3,9 @@ import { XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Area, AreaCh
 import { LatencyChart } from "./LatencyChart";
 import { AlertTriangle, XCircle } from "lucide-react";
 import { Badge } from "../ui/badge";
-import { LatencyData } from "@/lib/types";
+import { HealthHistoryData, LatencyData, latencyStats } from "@/lib/types";
 
-interface latencyStats {
-    average: number;
-    max: number;
-    min: number;
-}
-
-export default function Overview({ healthHistory, latencyStats, timeRange, latencyData }: { healthHistory: any[], latencyStats: latencyStats, timeRange: string, latencyData: LatencyData[] }) {
+export default function Overview({ healthHistory, latencyStats, timeRange, latencyData }: { healthHistory: HealthHistoryData[], latencyStats: latencyStats, timeRange: string, latencyData: LatencyData[] }) {
     return (
       <div>
         <Card className="bg-white/5 border-0">

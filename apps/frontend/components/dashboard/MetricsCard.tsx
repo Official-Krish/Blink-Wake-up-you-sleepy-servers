@@ -2,17 +2,9 @@ import { Activity, CheckCircle, Cpu, Wifi } from "lucide-react";
 import { Card, CardContent } from "../ui/card";
 import { Progress } from "../ui/progress";
 import { cn } from "@/lib/utils";
+import { latencyStats, ResourceUsageData, WebsiteWithUptime } from "@/lib/types";
 
-interface Website {
-    title: string;
-    url: string;
-    status: string;
-    CheckedAt: string;
-    uptime: number;
-    responseTime: number;
-}
-
-export default function MetricCard({ website, latencyStats, resourceUsage }: { website: Website, latencyStats: any, resourceUsage: any[] }) {
+export default function MetricCard({ website, latencyStats, resourceUsage }: { website: WebsiteWithUptime, latencyStats: latencyStats, resourceUsage: ResourceUsageData[] }) {
 
     if (!website) {
         return <div>Loading</div>;
