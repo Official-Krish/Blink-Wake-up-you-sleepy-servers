@@ -73,53 +73,87 @@ import { HealthHistoryData, LatencyData, WebsiteData } from "@/lib/types";
   };
   
 
-export function findClosestDataPoint(data: HealthHistoryData[], targetTime: Date): HealthHistoryData | null {
-    if (!data || data.length === 0) return null;
-    
-    // Ensure targetTime is properly handled
-    const targetTimeMs = targetTime.getTime();
-    
-    return data.reduce((closest, current) => {
-      // Explicitly parse the ISO string to ensure consistent handling
-      const currentDate = new Date(current.time);
-      const currentTimeMs = currentDate.getTime();
-      
-      if (!closest) return current;
-      
-      const closestDate = new Date(closest.time);
-      const closestTimeMs = closestDate.getTime();
-      
-      const currentDiff = Math.abs(currentTimeMs - targetTimeMs);
-      const closestDiff = Math.abs(closestTimeMs - targetTimeMs);
-      
-      return currentDiff < closestDiff ? current : closest;
-    }, null as HealthHistoryData | null);
-}
-
-export function findClosestDataPoint2(data: LatencyData[], targetTime: Date): LatencyData | null {
-  if (!data || data.length === 0) return null;
+export function findClosestDataPoint(
+  data: HealthHistoryData[], 
+  targetTime: Date,
+  maxTimeThreshold: number = 30 * 60 * 1000 // Default 30 minutes in milliseconds
+): HealthHistoryData | { status: 'unknown' } {
+  if (!data || data.length === 0) return { status: 'unknown' };
   
   // Ensure targetTime is properly handled
   const targetTimeMs = targetTime.getTime();
   
-  return data.reduce((closest, current) => {
-    // Explicitly parse the ISO string to ensure consistent handling
-    const currentDate = new Date(current.time);
+  let closest: HealthHistoryData | null = null;
+  let minDiff = Infinity;
+  
+  // Find the closest data point
+  for (const point of data) {
+    const currentDate = new Date(point.time);
     const currentTimeMs = currentDate.getTime();
+    const diff = Math.abs(currentTimeMs - targetTimeMs);
     
-    if (!closest) return current;
+    if (diff < minDiff) {
+      minDiff = diff;
+      closest = point;
+    }
+  }
+  
+  // Return unknown if no point found or if closest point is too far away
+  if (!closest || minDiff > maxTimeThreshold) {
+    return { status: 'unknown' };
+  }
+  
+  return closest;
+}
+
+export function findClosestDataPoint2(data: LatencyData[], targetTime: Date, maxTimeThreshold: number = 30 * 60 * 1000): LatencyData | null {
+  if (!data || data.length === 0) return { time: targetTime.toISOString(), value: 0 };
+  
+  // Ensure targetTime is properly handled
+  const targetTimeMs = targetTime.getTime();
+  
+  let closest: LatencyData | null = null;
+  let minDiff = Infinity;
+  
+  // Find the closest data point
+  for (const point of data) {
+    const currentDate = new Date(point.time);
+    const currentTimeMs = currentDate.getTime();
+    const diff = Math.abs(currentTimeMs - targetTimeMs);
     
-    const closestDate = new Date(closest.time);
-    const closestTimeMs = closestDate.getTime();
-    
-    const currentDiff = Math.abs(currentTimeMs - targetTimeMs);
-    const closestDiff = Math.abs(closestTimeMs - targetTimeMs);
-    
-    return currentDiff < closestDiff ? current : closest;
-  }, null as LatencyData | null);
+    if (diff < minDiff) {
+      minDiff = diff;
+      closest = point;
+    }
+  }
+  
+  if (!closest || minDiff > maxTimeThreshold) {
+    return { value: 0, time: targetTime.toISOString() };
+  }
+  
+  return closest;
 }
 
 export function formatTime(timestamp: string): string {
   const date = new Date(timestamp);
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+export function formatDateTime(timestamp: string): string {
+  const date = new Date(timestamp);
+  return date.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' ' + 
+         date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+export function formatRelativeTime(timestamp: string): string {
+  const date = new Date(timestamp);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  
+  if (diffMins < 60) {
+    return diffMins === 0 ? 'Just now' : `${diffMins}m ago`;
+  } else {
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
 }

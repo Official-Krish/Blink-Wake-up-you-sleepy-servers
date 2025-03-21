@@ -26,6 +26,7 @@ export async function GET() {
             status: pollHistory.find((history) => history.pollingId === ping.id)?.status,
             checkedAt: pollHistory.find((history) => history.pollingId === ping.id)?.CheckedAt.toString(),
         }));
+        console.log(data);
         return NextResponse.json(data);
     } catch (error) {
         console.log(error);

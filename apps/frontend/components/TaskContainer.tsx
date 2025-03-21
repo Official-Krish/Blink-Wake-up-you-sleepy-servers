@@ -4,17 +4,20 @@ import { useEffect, useState } from "react";
 import { TaskLogs } from "./TaskLogs";
 import { Button } from "./ui/button";
 import { Bounce, toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 interface Ping {
     id: string;
     url: string;
     status: string;
-    CheckedAt: string;
+    checkedAt: string;
 }
 
 export default function TaskContainer() {
     const [pings, setPings] = useState<Ping[]>([]);
     const [taskLogsOpen, setTaskLogsOpen] = useState<{ [key: string]: boolean }>({});
+
+    const router = useRouter();
 
     async function fetchPings() {
         const response = await axios.get("/api/ping/getAll");
@@ -82,6 +85,9 @@ export default function TaskContainer() {
                                 <div className="flex items-center">
                                     <div className={`h-3 w-3 rounded-full mr-3 ${ping.status === "UP" ? "bg-green-500" : "bg-red-500"}`}></div>
                                 </div>
+                                <Button onClick={() => router.push(`/detailedAnalysis/${ping.id}`)} variant="default">
+                                    Get Detailed Analysis
+                                </Button>
                                 <Button variant="default" onClick={() => toggleTaskDetails(ping.id)}>
                                     {taskLogsOpen[ping.id] ? <ChevronUp /> : <ChevronDown />}
                                 </Button>
@@ -91,7 +97,7 @@ export default function TaskContainer() {
                             </div>
                         </div>
                         {taskLogsOpen[ping.id] && (
-                            <TaskLogs Server={ping.status} Last_Polled={ping.CheckedAt} />
+                            <TaskLogs Server={ping.status} Last_Polled={ping.checkedAt} />
                         )}
                     </div>
                 ))

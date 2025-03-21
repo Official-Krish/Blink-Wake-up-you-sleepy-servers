@@ -9,7 +9,7 @@ export const sendDiscordNotification = async (webhookUrl: string, name: string, 
         Detected Downtime: ${TimeStamp} 
         Possible Causes: Network issues, configuration changes, or resource limitations. If this was unexpected, please check your server logs or restart your instance. If you need any assistance, feel free to reach out to our support team at support@gmail.com. We’re here to help! 
         Best regards, 
-        Team IDK NAME`, 
+        Team INITBOT`, 
       username: "Server Monitor", 
       avatar_url: "https://i.imgur.com/4M34hi2.png",
     };

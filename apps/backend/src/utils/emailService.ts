@@ -13,7 +13,7 @@ export function sendEmail(SendersEmail: string, name: string, url: string, TimeS
         Detected Downtime: ${TimeStamp} 
         Possible Causes: Network issues, configuration changes, or resource limitations. If this was unexpected, please check your server logs or restart your instance. If you need any assistance, feel free to reach out to our support team at support@gmail.com. We’re here to help! 
         Best regards, 
-        Team IDK NAME
+        Team INITBOT
         `
     });
 }

@@ -1,3 +1,4 @@
+import { formatDateTime } from "@/lib/DetailedAnalysisHelper";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -30,13 +31,7 @@ export const TaskLogs = ({
                       )}
                     >
                       <span className="font-medium">
-                        [ {(new Date(Last_Polled)).toLocaleString("en-US", {
-                          day: "numeric",
-                          month: "long",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          hour12: true,
-                        })} ]
+                        [ {formatDateTime(Last_Polled)} ]
                       </span>{" "}
                       - {Server === "UP" ? "Server is up" : "Server is down"} - {Server === "UP" ? "200" : "500"}
                     </li>

@@ -14,7 +14,7 @@ interface Item {
 let notifications = [
   {
     name: "Server Down",
-    description: "Name ",
+    description: "INITBOT", 
     time: "10m ago",
 
     icon: (
@@ -28,7 +28,7 @@ let notifications = [
   },
   {
     name: "Server Down",
-    description: "Name",
+    description: "INITBOT",
     time: "10m ago",
 
     icon: (
@@ -42,7 +42,7 @@ let notifications = [
   },
   {
     name: "Server Down",
-    description: "Name",
+    description: "INITBOT",
     time: "5m ago",
     icon: (
       <Image
@@ -55,7 +55,7 @@ let notifications = [
   },
   {
     name: "Server Down",
-    description: "Name",
+    description: "INITBOT",
     time: "2m ago",
     icon: (
       <Image
