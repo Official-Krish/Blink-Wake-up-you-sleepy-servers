@@ -14,6 +14,6 @@ app.use("/api/v1/ping", PollingRouter);
 app.use("/api/v1", NotificationRouter);
 app.use("/api/v1/website", WebsiteRouter);
 
-app.listen(8000, () => {
-    console.log("Server is running on port 3000");
+app.listen(8080, () => {
+    console.log("Server is running on port 8080");
 });

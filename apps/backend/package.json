@@ -16,14 +16,19 @@
     "@repo/db": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/bcrypt": "^5.0.2",
-    "@types/jsonwebtoken": "^9.0.8"
+    "@types/jsonwebtoken": "^9.0.8",
+    "tsup": "^8.3.6"
   },
   "dependencies": {
+    "@types/express": "^5.0.1",
     "@types/nodemailer": "^6.4.17",
+    "@types/cors": "^2.8.17",
+    "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.4.7",
+    "express": "^5.1.0",
     "ioredis": "^5.5.0",
     "jsonwebtoken": "^9.0.2",
     "redis": "^4.7.0",

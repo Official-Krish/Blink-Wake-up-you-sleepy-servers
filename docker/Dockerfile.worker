@@ -1,0 +1,31 @@
+FROM node:20-alpine
+RUN npm install -g pnpm
+
+WORKDIR /app
+
+# Create proper workspace configuration first
+RUN echo "packages:" > pnpm-workspace.yaml && \
+    echo "  - 'apps/*'" >> pnpm-workspace.yaml && \
+    echo "  - 'packages/*'" >> pnpm-workspace.yaml
+
+# Copy package files
+COPY package.json pnpm-lock.yaml turbo.json ./
+
+# Copy the packages directory first (including @repo/common)
+COPY ./packages/ ./packages/
+
+# Copy the worker application
+COPY ./apps/worker/ ./apps/worker/
+
+# Install dependencies at the workspace root level first
+RUN pnpm install
+
+# Generate the Prisma client
+RUN pnpm run db:generate
+
+# Then build the worker
+RUN cd apps/worker && pnpm build
+
+EXPOSE 6379
+
+CMD ["pnpm", "run", "worker"]

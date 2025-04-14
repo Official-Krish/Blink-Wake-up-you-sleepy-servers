@@ -1,0 +1,27 @@
+FROM node:20-alpine
+RUN npm install -g pnpm
+
+WORKDIR /app
+
+# Create proper workspace configuration first
+RUN echo "packages:" > pnpm-workspace.yaml && \
+    echo "  - 'apps/*'" >> pnpm-workspace.yaml && \
+    echo "  - 'packages/*'" >> pnpm-workspace.yaml
+
+# Copy package files
+COPY package.json pnpm-lock.yaml turbo.json ./
+
+# Copy the packages directory first (including @repo/common)
+COPY ./packages/ ./packages/
+
+# Copy the frontend application
+COPY ./apps/frontend/ ./apps/frontend/
+
+# Install dependencies at the workspace root level first
+RUN pnpm install
+
+RUN pnpm run db:generate
+
+EXPOSE 3000
+
+CMD ["pnpm", "run", "frontend"]
