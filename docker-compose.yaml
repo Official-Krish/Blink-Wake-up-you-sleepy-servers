@@ -1,0 +1,48 @@
+version: '3.7'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.frontend
+    ports:
+      - 3000:3000
+    volumes:
+      - ./apps/frontend:/app/apps/frontend
+    environment:
+      - BACKEND_URL="http://localhost:8080/api/v1/"
+    
+  worker:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.worker
+    ports:
+      - 6379:6379
+    volumes:
+      - ./apps/worker:/app/apps/worker
+    environment:
+      - REDIS_HOST="localhost"
+      - BACKEND_URL="http://localhost:8000/api/v1/"
+      - REDIS_PORT=6379
+
+  primary-backend:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.backend
+    ports:
+      - 3000:3000
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+
+
+volumes:
+  postgres_data:
