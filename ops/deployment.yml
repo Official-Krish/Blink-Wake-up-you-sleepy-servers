@@ -1,0 +1,123 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: initbot-frontend
+  labels:
+    app: initbot-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: initbot-frontend
+  template:
+    metadata:
+      labels:
+        app: initbot-frontend
+    spec:
+      containers:
+        - name: initbot-frontend
+          image: krishanand01/initbot-frontend
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - name: env-file
+              mountPath: /app/apps/frontend/.env
+              subPath: env
+      volumes:
+        - name: env-file
+          secret:
+            secretName: initbot-secret
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: initbot-backend
+  labels:
+    app: initbot-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: initbot-backend
+  template:
+    metadata:
+      labels:
+        app: initbot-backend
+    spec:
+      containers:
+        - name: initbot-backend
+          image: krishanand01/initbot-backend
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: env-file
+              mountPath: /app/apps/backend/.env
+              subPath: env
+      volumes:
+        - name: env-file
+          secret:
+            secretName: initbot-secret
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: initbot-worker
+  labels:
+    app: initbot-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: initbot-worker
+  template:
+    metadata:
+      labels:
+        app: initbot-worker
+    spec:
+      containers:
+        - name: initbot-worker
+          image: krishanand01/initbot-redis-worker
+          ports:
+            - containerPort: 6379
+          env:
+          - name: REDIS_HOST
+            value: "redis" 
+          - name: REDIS_PORT
+            value: "6379"
+          - name: BACKEND_URL
+            value: "https://api.initbot.krishdev.xyz/api/v1"
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:7-alpine
+        ports:
+        - containerPort: 6379
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+      volumes:
+      - name: redis-data
+        emptyDir: {}

@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - initbot.krishdev.xyz
+      secretName: initbot-frontend-tls
+    - hosts:
+        - api.initbot.krishdev.xyz
+      secretName: initbot-backend-tls
+
+  rules:
+    - host: initbot.krishdev.xyz
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: initbot-frontend
+                port:
+                  number: 80
+
+    - host: api.initbot.krishdev.xyz
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: initbot-backend
+                port:
+                  number: 80
