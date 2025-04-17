@@ -108,13 +108,6 @@ spec:
         image: redis:7-alpine
         ports:
         - containerPort: 6379
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "100m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
         volumeMounts:
         - name: redis-data
           mountPath: /data

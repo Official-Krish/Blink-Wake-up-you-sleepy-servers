@@ -1,7 +1,7 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: initbot-frontend
+  name: initbot-frontend-cert
   namespace: default
 spec:
   secretName: initbot-frontend-tls
@@ -15,7 +15,7 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: initbot-backend
+  name: initbot-backend-cert
   namespace: default
 spec:
   secretName: initbot-backend-tls
