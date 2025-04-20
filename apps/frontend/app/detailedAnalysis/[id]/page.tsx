@@ -34,7 +34,7 @@ const WebsiteDetails = () => {
   useEffect(() => {
     console.log("fetching website details");
     getWebsiteDetails();
-  }, [id]);
+  }, [id, getWebsiteDetails]);
   
   useEffect(() => {
     const hourMultiplier = timeRange === '24h' ? 1 : timeRange === '7d' ? 7 : 30;

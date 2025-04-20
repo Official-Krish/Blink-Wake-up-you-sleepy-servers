@@ -1,6 +1,6 @@
 import { AlertTriangle, CheckCircle, Clock, ExternalLink, Globe, XCircle } from "lucide-react";
 import { Badge } from '@/components/ui/badge';
-import { formatDateTime, formatRelativeTime } from "@/lib/DetailedAnalysisHelper";
+import { formatRelativeTime } from "@/lib/DetailedAnalysisHelper";
 
 interface Website {
     title: string;
