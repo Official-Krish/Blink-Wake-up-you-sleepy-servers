@@ -20,7 +20,7 @@ export const authConfig = {
     ],
     secret: process.env.NEXT_PUBLIC_AUTH_SECRET,
     callbacks: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any)
         session: ({ session, token }: any): session => {
             const newSession: session = session as session;
             if (newSession.user && token.uid) {
