@@ -25,7 +25,7 @@ const fetchAndRescheduleTask = async (): Promise<{ id: string; url: string; inte
         1, 
         'pollingQueue', // Key name
         now, // ARGV[1]: Current timestamp
-        now + 1000 * 60  // ARGV[2]: Next polling time (e.g., 5 minute later)
+        now + 1000 * 60 * 5 // ARGV[2]: Next polling time (e.g., 5 minute later)
     );
 
     return task ? JSON.parse(task as string) : null;
@@ -86,4 +86,4 @@ const startWorker = async (): Promise<void> => {
 }
 
 startWorker();
-setInterval(syncResultsToDatabase, 1000 * 60 ); // Sync results to database every 10 minutes
+setInterval(syncResultsToDatabase, 1000 * 60 * 5 ); // Sync results to database every 10 minutes
