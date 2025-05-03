@@ -9,7 +9,8 @@ WebsiteRouter.get("/getDetails", async (req, res) => {
     const websiteId = req.query.websiteId;
     
     if (!websiteId) {
-        return res.status(400).json({ message: "Please provide all the required fields" });
+        res.status(400).json({ message: "Please provide all the required fields" });
+        return;
     }
 
     try {
@@ -20,7 +21,8 @@ WebsiteRouter.get("/getDetails", async (req, res) => {
         });
 
         if (!user) {
-            return res.status(400).json({ message: "Invalid userId" });
+            res.status(400).json({ message: "Invalid userId" });
+            return;
         }
 
         const website = await prisma.pollingLinks.findUnique({
@@ -30,7 +32,8 @@ WebsiteRouter.get("/getDetails", async (req, res) => {
         });
 
         if (!website) {
-            return res.status(400).json({ message: "Invalid websiteId" });
+            res.status(400).json({ message: "Invalid websiteId" });
+            return;
         }
 
         const websiteDetails = await prisma.polling_History.findMany({
@@ -42,8 +45,8 @@ WebsiteRouter.get("/getDetails", async (req, res) => {
             },
         });
 
-        return res.status(200).json({ message: "Details retrieved successfully", websiteDetails });
+        res.status(200).json({ message: "Details retrieved successfully", websiteDetails });
     } catch (error) {
-        return res.status(500).json({ message: "Internal server error" });
+        res.status(500).json({ message: "Internal server error" });
     }
 })

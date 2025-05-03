@@ -32,6 +32,6 @@ NotificationRouter.post("/sendNoti", async (req, res) => {
         }
         res.status(200).json({ message: "Notification sent successfully" });
     } catch (error) {
-        return res.status(500).json({ message: "Internal server error" });
+        res.status(500).json({ message: "Internal server error" });
     }
 });

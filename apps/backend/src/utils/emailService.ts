@@ -4,7 +4,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export function sendEmail(SendersEmail: string, name: string, url: string, TimeStamp: string) {
     resend.emails.send({
-        from: 'onboarding@resend.dev',
+        from: 'Initbot<support@krishdev.xyz>',
         to: SendersEmail,
         subject: 'Your Server is Down – Action Required',
         html: `Dear ${name}, We noticed that your server associated with ${url} is currently down. This may impact your services, and we recommend checking your server status as soon as possible. 

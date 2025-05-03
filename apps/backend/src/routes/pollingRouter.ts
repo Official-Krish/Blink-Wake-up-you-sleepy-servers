@@ -8,7 +8,8 @@ PollingRouter.post("/create", async (req, res) => {
     const { url, userId, notify, discordUrl } = req.body;
 
     if (!url || !userId) {
-        return res.status(400).json({ message: "Please provide all the required fields" });
+        res.status(400).json({ message: "Please provide all the required fields" });
+        return;
     }
     let discordURL
     if(!notify){
@@ -31,7 +32,7 @@ PollingRouter.post("/create", async (req, res) => {
         await addLinkToPollingQueue(url, userId);
         res.status(200).json({ message: "Polling added successfully" });
     } catch (error) {
-        return res.status(500).json({ message: "Internal server error" });
+        res.status(500).json({ message: "Internal server error" });
     }
 });
 
@@ -51,10 +52,8 @@ PollingRouter.post("/delete", async (req, res) => {
         });        
         removeLinkFromPollingQueue(LINK.userId, url);
         res.status(200).json({ message: "Polling deleted successfully" });
-        return;
 
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });
-        return;
     }
 });
