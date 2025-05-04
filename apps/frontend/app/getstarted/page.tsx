@@ -48,7 +48,7 @@ export default function ProductSignIn() {
             />
           </div>
           <CardTitle className="text-4xl font-bold text-center text-white">
-            InitBot
+            Blink
           </CardTitle>
           <CardDescription className="text-center text-gray-400 text-lg max-w-md mt-2">
             Jumpstart your project with instant user engagement as there is no
@@ -68,7 +68,7 @@ export default function ProductSignIn() {
                     </h3>
                   </div>
                   <p className="text-gray-600 text-sm">
-                    Instantly wake up your serverless functions with InitBot.
+                    Instantly wake up your serverless functions with Blink.
                   </p>
                 </CardContent>
               </Card>
@@ -93,13 +93,13 @@ export default function ProductSignIn() {
               <CardHeader>
                 <CardTitle className="text-white">Welcome</CardTitle>
                 <CardDescription className="text-gray-400">
-                  Get started with InitBot by signing in with your Google account
+                  Get started with Blink by signing in with your Google account
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <Button
                   variant="outline"
-                  className="w-full rounded-xl bg-white hover:bg-gray-50 text-gray-800 font-medium py-2 px-4transition duration-200 ease-in-out flex items-center justify-center"
+                  className="w-full rounded-xl bg-white hover:bg-gray-100 text-gray-800 hover:text-gray-800 font-medium py-2 px-4transition duration-200 ease-in-out flex items-center justify-center"
                   onClick={handleGoogleSignIn}
                 >
                   <svg
@@ -141,7 +141,7 @@ export default function ProductSignIn() {
                 </Button>
               </CardContent>
               <CardFooter className="text-center text-gray-400 text-sm">
-                InitBot is free to use and open-source
+                Blink is free to use and open-source
               </CardFooter>
             </Card>
           </div>

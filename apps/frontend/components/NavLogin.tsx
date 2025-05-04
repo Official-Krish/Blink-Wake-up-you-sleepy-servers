@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 export const Navlogin = () => {
   const { data: session, status } = useSession();
@@ -18,7 +18,7 @@ export const Navlogin = () => {
         variant={"default"}
         className="text-white bg-transparent hover:bg-transparent px-0"
         onClick={() => {
-          signIn();
+          window.location.href = "/getstarted";
         }}
       >
         Login

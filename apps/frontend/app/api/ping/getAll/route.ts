@@ -20,6 +20,9 @@ export async function GET() {
                     in: pings.map((ping) => ping.id),
                 },
             },
+            orderBy: {
+                CheckedAt: "desc",
+            },
         });
         const data = pings.map((ping) => ({
             ...ping,

@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "INIT BOT",
+  title: "Blink",
   description: "Eliminates Cold Start Problems",
 };
 
