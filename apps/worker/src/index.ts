@@ -46,7 +46,7 @@ const pollLink = async (url: string, userId: string): Promise<void> => {
         if (response.status !== 200) {
             PolledStatus = "DOWN";
             await axios.post(`${process.env.BACKEND_URL}/SendNoti`, {
-                ueerId: userId,
+                userId: userId,
                 url: url,
                 TimeStamp: new Date().toString(),
             })
