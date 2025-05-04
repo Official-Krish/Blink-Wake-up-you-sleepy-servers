@@ -1,4 +1,4 @@
-# 🚀 INITBOT Wake Up You Sleepy Servers
+# 🚀 Blink Wake Up You Sleepy Servers
 
 Cold Start Solver is a web application that helps mitigate the cold start problem for applications by optimizing caching, pre-warming infrastructure, and providing real-time alerts when the server is down.
 
@@ -30,7 +30,7 @@ Ensure you have the following installed:
 ### Installation
 ```bash
 git clone https://github.com/Official-Krish/Wake-up-you-sleepy-servers
-cd InitBot-wake-up-you-sleepy-servers
+cd Blink-wake-up-you-sleepy-servers
 pnpm install
 ```
 
