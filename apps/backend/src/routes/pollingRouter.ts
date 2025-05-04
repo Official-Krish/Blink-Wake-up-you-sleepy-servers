@@ -19,7 +19,7 @@ PollingRouter.post("/create", async (req, res) => {
     }
 
     try {
-        await prisma.pollingLinks.create({ 
+        const polling = await prisma.pollingLinks.create({ 
             data: { 
                 url, 
                 notify: notify,
@@ -29,6 +29,21 @@ PollingRouter.post("/create", async (req, res) => {
                 }
             } 
         });
+        
+        const start = Date.now();
+        const response = await fetch(url);
+        const end = Date.now();
+        
+        await prisma.polling_History.create({
+            data: {
+                url: url,
+                pollingId: polling.id,
+                status: response.status === 200 ? "UP" : "DOWN",
+                CheckedAt: new Date(),
+                responseTime: end - start,
+            },
+        });
+
         await addLinkToPollingQueue(url, userId);
         res.status(200).json({ message: "Polling added successfully" });
     } catch (error) {
